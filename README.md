@@ -28,14 +28,10 @@ When a review is triggered, DevLens does not send the code to a single LLM. It u
 3. **Architecture Agent:** Analyzes modularity and dependency drift.
 4. **Clean Code Agent:** Enforces DRY principles and naming conventions.
 
-*See [`docs/ai-system/rag-architecture.md`](./docs/ai-system/rag-architecture.md) for details on how we inject team memory into these agents.*
-
 ## ⚡ Scalable Infrastructure
 
 To handle massive repositories, DevLens utilizes **BullMQ** and **Redis**. 
 Heavy AI processing is completely decoupled from the Node.js API. The Python workers stream partial Server-Sent Events (SSE) back to Node, which then broadcasts them to the React frontend via WebSockets in real-time.
-
-*See [`docs/scaling/queue-infrastructure.md`](./docs/scaling/queue-infrastructure.md) for sequence diagrams.*
 
 ## 🔒 Security Hardening
 
@@ -46,6 +42,7 @@ Heavy AI processing is completely decoupled from the Node.js API. The Python wor
 ## 🏃‍♂️ Running Locally
 
 1. Clone the repository.
-2. Add your `.env` variables (Groq API, MongoDB URI).
-3. Run `docker-compose up --build`.
-4. Access the platform at `http://localhost`.
+2. Add your `.env` variables in `frontend`, `backend`, and `ai-service`.
+3. Start the backend: `cd backend && npm run dev`
+4. Start the AI service: `cd ai-service && uvicorn app.main:app --reload --port 8000`
+5. Start the frontend: `cd frontend && npm run dev`

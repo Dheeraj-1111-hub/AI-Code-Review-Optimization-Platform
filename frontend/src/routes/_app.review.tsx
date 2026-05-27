@@ -77,24 +77,26 @@ function ReviewWorkspace() {
       setStreaming(true);
       setMessages(["Initializing DevLens AI Engine..."]);
 
-      // Authenticate Socket connection
+      // Authenticate and connect socket FIRST, wait for connection
       const token = await getToken();
       if (!socket.connected) {
         socket.auth = { token };
         socket.connect();
+        // Wait for socket to actually connect before proceeding
+        await new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Socket connection timeout')), 10000);
+          socket.once('connect', () => { clearTimeout(timeout); resolve(); });
+          socket.once('connect_error', (err) => { clearTimeout(timeout); reject(err); });
+        });
       }
 
       // Trigger the backend to start the review
       const res: any = await api.post('/v1/reviews/start', {
         code: activeFile?.content || '',
         language: activeFile?.language || 'typescript'
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
       });
 
-      // Join the specific room for this review
+      // Join the specific room for this review immediately
       socket.emit('join-review', res.reviewId);
 
     } catch (error) {

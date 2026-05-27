@@ -63,12 +63,23 @@ export const startReview = async (req: Request, res: Response) => {
         responseType: 'stream'
       });
 
+      // Buffer to accumulate partial SSE chunks
+      let buffer = '';
+
       response.data.on('data', async (chunk: Buffer) => {
-        const str = chunk.toString();
-        // SSE format is "data: {...}\n\n"
-        if (str.startsWith('data: ')) {
+        buffer += chunk.toString();
+
+        // SSE messages are separated by double newlines
+        const messages = buffer.split('\n\n');
+        // The last element may be an incomplete message — keep it in the buffer
+        buffer = messages.pop() || '';
+
+        for (const message of messages) {
+          const line = message.trim();
+          if (!line.startsWith('data: ')) continue;
           try {
-            const jsonData = JSON.parse(str.replace('data: ', '').trim());
+            const jsonStr = line.slice(6).trim(); // Remove 'data: ' prefix
+            const jsonData = JSON.parse(jsonStr);
             
             // Forward chunk to the frontend via Socket.io
             io.to(streamRoom).emit('review-chunk', jsonData);
@@ -92,7 +103,6 @@ export const startReview = async (req: Request, res: Response) => {
               });
 
               if (review.repositoryId) {
-                // Phase 4: Sync Intelligence Metrics to Repository
                 await Repository.findByIdAndUpdate(review.repositoryId, {
                   healthScore: finalResult.overallScore || 100,
                   metrics: {
@@ -120,13 +130,11 @@ export const startReview = async (req: Request, res: Response) => {
                   entity: 'review',
                   metadata: { reviewId: review._id, reviewTitle: review.title }
                 });
-                
-                // Notify the dashboard to re-fetch real-time aggregations
                 io.emit('dashboard:update', { workspaceId: review.workspaceId });
               }
             }
           } catch (e) {
-            // Ignore parse errors from partial chunks
+            console.error('Failed to parse SSE message:', e);
           }
         }
       });

@@ -1,13 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@clerk/clerk-react';
 import { api } from '@/services/api/client';
 
 export const useProfile = () => {
+  const { isSignedIn, isLoaded } = useAuth();
   return useQuery({
     queryKey: ['user', 'profile'],
     queryFn: async () => {
       const data = await api.get(`/v1/users/me`);
       return data.data;
-    }
+    },
+    enabled: isLoaded && !!isSignedIn,
   });
 };
 
@@ -26,12 +29,14 @@ export const useUpdateProfile = () => {
 };
 
 export const useWorkspaceSettings = () => {
+  const { isSignedIn, isLoaded } = useAuth();
   return useQuery({
     queryKey: ['workspace', 'settings'],
     queryFn: async () => {
       const data = await api.get(`/v1/workspaces/settings`);
       return data.data;
-    }
+    },
+    enabled: isLoaded && !!isSignedIn,
   });
 };
 

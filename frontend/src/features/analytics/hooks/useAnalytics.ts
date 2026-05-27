@@ -1,13 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from '@clerk/clerk-react';
 import { api } from "@/services/api/client";
 
 export const useAnalytics = () => {
+  const { isSignedIn, isLoaded } = useAuth();
   return useQuery({
     queryKey: ['analytics'],
     queryFn: async () => {
       const data = await api.get(`/v1/analytics`);
       return data.data;
     },
+    enabled: isLoaded && !!isSignedIn,
     retry: false
   });
 };

@@ -1,34 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { useAuth } from '@clerk/clerk-react';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+import { api } from '@/services/api/client';
 
 export const useAPIKeys = () => {
-  const { getToken } = useAuth();
-  
   return useQuery({
     queryKey: ['workspace', 'api-keys'],
     queryFn: async () => {
-      const token = await getToken();
-      const { data } = await axios.get(`${API_URL}/api-keys`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.get(`/v1/api-keys`);
       return data.data;
     }
   });
 };
 
 export const useGenerateAPIKey = () => {
-  const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload: { name: string }) => {
-      const token = await getToken();
-      const { data } = await axios.post(`${API_URL}/api-keys`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.post(`/v1/api-keys`, payload);
       return data.data; // This will contain { apiKey, rawKey }
     },
     onSuccess: () => {
@@ -38,15 +26,11 @@ export const useGenerateAPIKey = () => {
 };
 
 export const useRevokeAPIKey = () => {
-  const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const token = await getToken();
-      const { data } = await axios.delete(`${API_URL}/api-keys/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.delete(`/v1/api-keys/${id}`);
       return data.data;
     },
     onSuccess: () => {

@@ -1,19 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { useAuth } from "@clerk/clerk-react";
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+import { api } from "@/services/api/client";
 
 export const useAnalytics = () => {
-  const { getToken } = useAuth();
-  
   return useQuery({
     queryKey: ['analytics'],
     queryFn: async () => {
-      const token = await getToken();
-      const { data } = await axios.get(`${API_URL}/analytics`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.get(`/v1/analytics`);
       return data.data;
     },
     retry: false
@@ -21,15 +13,11 @@ export const useAnalytics = () => {
 };
 
 export const useGenerateAnalytics = () => {
-  const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
-      const token = await getToken();
-      const { data } = await axios.post(`${API_URL}/analytics/generate`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.post(`/v1/analytics/generate`, {});
       return data.data;
     },
     onSuccess: () => {

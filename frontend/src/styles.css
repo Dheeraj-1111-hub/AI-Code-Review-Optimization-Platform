@@ -1,0 +1,250 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-hover: var(--surface-hover);
+  --color-electric: var(--electric);
+
+  /* AI Agent colors */
+  --color-agent-security: var(--agent-security);
+  --color-agent-performance: var(--agent-performance);
+  --color-agent-architecture: var(--agent-architecture);
+  --color-agent-refactor: var(--agent-refactor);
+  --color-agent-cleancode: var(--agent-cleancode);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Deep blacks with distinguishable surfaces */
+  --background: oklch(0.12 0 0);
+  --foreground: oklch(0.98 0 0);
+
+  --surface: oklch(0.16 0 0);
+  --surface-elevated: oklch(0.20 0 0);
+  --surface-hover: oklch(0.22 0 0);
+
+  --card: oklch(0.16 0 0);
+  --card-foreground: oklch(0.98 0 0);
+
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: oklch(0.98 0 0);
+
+  /* Electric Indigo brand color */
+  --electric: oklch(0.68 0.22 265);
+
+  --primary: oklch(0.68 0.22 265);
+  --primary-foreground: oklch(0.98 0 0);
+
+  --secondary: oklch(0.25 0 0);
+  --secondary-foreground: oklch(0.98 0 0);
+
+  --muted: oklch(0.20 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+
+  --accent: oklch(0.68 0.22 265 / 0.1);
+  --accent-foreground: oklch(0.68 0.22 265);
+
+  --destructive: oklch(0.62 0.23 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --success: oklch(0.72 0.17 160);
+  --warning: oklch(0.78 0.16 75);
+
+  --border: oklch(0.26 0 0);
+  --input: oklch(0.22 0 0);
+  --ring: oklch(0.68 0.22 265);
+
+  --sidebar: oklch(0.14 0 0);
+  --sidebar-foreground: oklch(0.92 0 0);
+  --sidebar-primary: oklch(0.68 0.22 265);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.68 0.22 265 / 0.1);
+  --sidebar-accent-foreground: oklch(0.68 0.22 265);
+  --sidebar-border: oklch(0.24 0 0);
+  --sidebar-ring: oklch(0.68 0.22 265);
+
+  /* AI Agent semantic colors */
+  --agent-security:     oklch(0.62 0.23 25);   /* Red */
+  --agent-performance:  oklch(0.78 0.16 75);   /* Amber */
+  --agent-architecture: oklch(0.68 0.18 230);  /* Blue */
+  --agent-refactor:     oklch(0.72 0.15 180);  /* Teal */
+  --agent-cleancode:    oklch(0.68 0.22 295);  /* Purple */
+}
+
+.dark { color-scheme: dark; }
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: oklch(0.68 0.22 265 / 0.3); }
+
+  /* Accessibility: Global focus ring */
+  :focus-visible {
+    outline: 2px solid oklch(0.68 0.22 265);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+
+  /* ─── Backgrounds ──────────────────────────────────── */
+  .bg-dot-pattern {
+    background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .bg-surface-hover { background-color: var(--surface-hover); }
+
+  /* ─── Gradients ────────────────────────────────────── */
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, oklch(0.68 0.22 265) 0%, oklch(0.60 0.24 295) 100%);
+  }
+
+  .bg-gradient-surface {
+    background: linear-gradient(180deg, var(--surface) 0%, var(--background) 100%);
+  }
+
+  /* ─── Text utilities ───────────────────────────────── */
+  .text-gradient {
+    background: linear-gradient(135deg, oklch(0.98 0 0) 0%, oklch(0.68 0.22 265) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-electric    { color: var(--electric); }
+  .text-warning     { color: var(--warning); }
+  .text-success     { color: var(--success); }
+  .text-violet-glow { color: oklch(0.75 0.22 275); }
+
+  /* ─── Typography ───────────────────────────────────── */
+  .font-heading   { font-family: var(--font-heading); font-weight: 700; letter-spacing: -0.02em; }
+  .display-xl     { font-size: 4.5rem;   line-height: 1.05;  font-weight: 800; letter-spacing: -0.04em; }
+  .display-lg     { font-size: 3.75rem;  line-height: 1.07;  font-weight: 800; letter-spacing: -0.03em; }
+  .heading-xl     { font-size: 2.25rem;  line-height: 1.2;   font-weight: 700; letter-spacing: -0.02em; }
+  .heading-lg     { font-size: 1.875rem; line-height: 1.25;  font-weight: 700; letter-spacing: -0.02em; }
+  .body-lg        { font-size: 1.125rem; line-height: 1.75; }
+  .body-md        { font-size: 1rem;     line-height: 1.75; }
+  .caption        { font-size: 0.75rem;  line-height: 1.5;   letter-spacing: 0.04em; }
+  .mono           { font-family: var(--font-mono); font-size: 0.875rem; }
+
+  /* ─── Gradient border -> Redefined as Minimalist Monochrome Card ─── */
+  .gradient-border {
+    background-color: #09090b !important;
+    border: 1px solid #1f1f23 !important;
+    border-radius: 16px !important;
+    transition: border-color 0.2s ease !important;
+  }
+  .gradient-border:hover {
+    border-color: #2f2f35 !important;
+  }
+  .gradient-border::before {
+    display: none !important;
+  }
+
+  /* ─── Glow effects (Disabled for minimal mode) ───────── */
+  .glow { box-shadow: none; }
+  .glow-sm { box-shadow: none; }
+  .glow-text { text-shadow: none; }
+
+  /* ─── Custom scrollbar ─────────────────────────────── */
+  .custom-scrollbar::-webkit-scrollbar        { width: 4px; height: 4px; }
+  .custom-scrollbar::-webkit-scrollbar-track  { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb  { background: oklch(0.35 0 0); border-radius: 9999px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: oklch(0.45 0 0); }
+
+  /* ─── AI Agent colors ──────────────────────────────── */
+  .text-agent-security     { color: var(--agent-security); }
+  .text-agent-performance  { color: var(--agent-performance); }
+  .text-agent-architecture { color: var(--agent-architecture); }
+  .text-agent-refactor     { color: var(--agent-refactor); }
+  .text-agent-cleancode    { color: var(--agent-cleancode); }
+
+  .bg-agent-security     { background-color: oklch(0.62 0.23 25 / 0.1); }
+  .bg-agent-performance  { background-color: oklch(0.78 0.16 75 / 0.1); }
+  .bg-agent-architecture { background-color: oklch(0.68 0.18 230 / 0.1); }
+  .bg-agent-refactor     { background-color: oklch(0.72 0.15 180 / 0.1); }
+  .bg-agent-cleancode    { background-color: oklch(0.68 0.22 295 / 0.1); }
+
+  /* ─── Animations ───────────────────────────────────── */
+  @keyframes pulse-ring {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  .pulse-ring { animation: pulse-ring 2s ease-in-out infinite; }
+
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(90deg, transparent, oklch(0.68 0.22 265 / 0.08), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2.4s linear infinite;
+  }
+
+  /* Blinking typing cursor — used in AI streaming */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+  .caret::after {
+    content: "▋";
+    display: inline;
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+    color: var(--electric);
+    font-size: 0.9em;
+  }
+}

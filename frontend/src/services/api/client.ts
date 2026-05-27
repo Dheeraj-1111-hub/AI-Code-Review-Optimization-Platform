@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const rawBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Automatically strip trailing /v1 if it was accidentally included in the environment variable
+const baseURL = rawBaseUrl.replace(/\/v1\/?$/, '');
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

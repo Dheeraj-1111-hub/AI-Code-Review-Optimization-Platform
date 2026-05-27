@@ -12,12 +12,24 @@ export const api = axios.create({
   },
 });
 
+let globalGetToken: (() => Promise<string | null>) | null = null;
+
+export const setTokenGetter = (getter: () => Promise<string | null>) => {
+  globalGetToken = getter;
+};
+
 // Interceptor to inject Clerk Token
 api.interceptors.request.use(
   async (config) => {
     try {
-      // Access Clerk instance from window object
-      const token = await (window as any).Clerk?.session?.getToken();
+      let token = null;
+      if (globalGetToken) {
+        token = await globalGetToken();
+      } else {
+        // Fallback to window object
+        token = await (window as any).Clerk?.session?.getToken();
+      }
+      
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

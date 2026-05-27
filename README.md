@@ -122,6 +122,4 @@ npm run dev
 Visit `http://localhost:5173` in your browser to access the DevLens platform!
 
 ---
-<div align="center">
-  <i>Built for the modern engineering team.</i>
-</div>
+

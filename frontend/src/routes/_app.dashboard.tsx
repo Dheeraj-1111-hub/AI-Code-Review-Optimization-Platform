@@ -28,7 +28,7 @@ function Dashboard() {
   useDashboardSockets(workspaceId);
 
   // Wait until workspaceId is resolved before showing loading skeleton
-  if (!workspaceId || (workspaceId && isLoading && !dashboardData)) {
+  if (!workspaceId || isLoading || (!dashboardData && !isError)) {
     return (
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         {/* Header Skeleton */}
@@ -69,6 +69,16 @@ function Dashboard() {
              <div className="h-64 rounded-xl bg-surface/50 border border-border animate-pulse" />
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (isError || !dashboardData) {
+    return (
+      <div className="p-6 max-w-7xl mx-auto space-y-6 flex flex-col items-center justify-center min-h-[50vh]">
+        <AlertTriangle className="h-12 w-12 text-red-500 mb-4" />
+        <h2 className="text-xl font-medium text-white">Dashboard Unavailable</h2>
+        <p className="text-zinc-400">We couldn't load your dashboard data. The server might be restarting or updating.</p>
       </div>
     );
   }

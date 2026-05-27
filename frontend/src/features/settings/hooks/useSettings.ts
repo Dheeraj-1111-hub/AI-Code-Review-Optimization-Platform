@@ -1,34 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { useAuth } from '@clerk/clerk-react';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+import { api } from '@/services/api/client';
 
 export const useProfile = () => {
-  const { getToken } = useAuth();
-  
   return useQuery({
     queryKey: ['user', 'profile'],
     queryFn: async () => {
-      const token = await getToken();
-      const { data } = await axios.get(`${API_URL}/users/me`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.get(`/v1/users/me`);
       return data.data;
     }
   });
 };
 
 export const useUpdateProfile = () => {
-  const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload: { name: string; email: string }) => {
-      const token = await getToken();
-      const { data } = await axios.put(`${API_URL}/users/profile`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.put(`/v1/users/profile`, payload);
       return data.data;
     },
     onSuccess: () => {
@@ -38,30 +26,21 @@ export const useUpdateProfile = () => {
 };
 
 export const useWorkspaceSettings = () => {
-  const { getToken } = useAuth();
-
   return useQuery({
     queryKey: ['workspace', 'settings'],
     queryFn: async () => {
-      const token = await getToken();
-      const { data } = await axios.get(`${API_URL}/workspaces/settings`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.get(`/v1/workspaces/settings`);
       return data.data;
     }
   });
 };
 
 export const useUpdateSettings = () => {
-  const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload: { aiConfig?: any; settings?: any; integrations?: any }) => {
-      const token = await getToken();
-      const { data } = await axios.put(`${API_URL}/workspaces/settings`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const data = await api.put(`/v1/workspaces/settings`, payload);
       return data.data;
     },
     onSuccess: () => {
